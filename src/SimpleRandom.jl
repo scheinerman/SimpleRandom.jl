@@ -28,9 +28,31 @@ function RandomSubset(A::Union{Set,IntSet})
   return B
 end
 
-function RandomSubset(n::Int)
-  A = Set(1:n)
-  return RandomSubset(A)
+RandomSubset(n::Int) = RandomSubset(Set(1:n))
+
+function RandomSubset(A::Union{Set,IntSet}, k::Int)
+  n = length(A)
+  if k<0 || k>n
+    error("k = $k is out of range")
+  end
+  T = typeof(A)
+  B = T()
+  elements = collect(A)
+  p = randperm(n)
+  for j=1:k
+    push!(B,elements[p[j]])
+  end
+  return B
 end
+
+function RandomSubset(n::Int, k::Int)
+  if n<0 || k<0 || k>n
+    error("n = $n and/or k = $k invalid")
+  end
+  x = randperm(n)
+  y = x[1:k]
+  return Set(y)
+end
+
 
 # end
