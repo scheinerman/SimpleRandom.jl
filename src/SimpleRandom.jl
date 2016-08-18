@@ -1,5 +1,7 @@
 module SimpleRandom
 
+export RandomUnitVector, RandomSubset
+
 """
 `RandomUnitVector(d)` returns a random `d`-dimensional unit vector.
 """
