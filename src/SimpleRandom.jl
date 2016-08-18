@@ -1,4 +1,4 @@
-# module SimpleRandom
+module SimpleRandom
 
 """
 `RandomUnitVector(d)` returns a random `d`-dimensional unit vector.
@@ -55,4 +55,4 @@ function RandomSubset(n::Int, k::Int)
 end
 
 
-# end
+end  # end of module
