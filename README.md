@@ -57,6 +57,12 @@ to `0.5`.
 **Note**: This is simply a wrapper around `StatsFuns.RFunctions.binomrand`
 but converts the output to an `Int`.
 
+### Poisson
+
+`poisson_rv(lambda)` returns a Poisson random value with mean `lambda`
+(which defaults to `1.0`).
+
+
 #### To do list (for distributions)
 
 + Poisson

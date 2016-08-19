@@ -98,6 +98,16 @@ export binom_rv
 """
 binom_rv(n::Int,p::Float64=0.5) = Int(binomrand(n,p))
 
+import StatsFuns.RFunctions.poisrand
+export poisson_rv
+
+"""
+`poisson_rv(lambda)` generates a Poisson random value with
+mean `lamba` (which defaults to `1.0`).
+"""
+poisson_rv(lambda::Real) = Int(poisrand(lambda))
+
+
 
 
 end  # end of module
