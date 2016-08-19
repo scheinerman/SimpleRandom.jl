@@ -33,3 +33,15 @@ must be nonnegative and not all zero.
 + `random_choice(dict)` choose a random key `k` from `dict` with weight
 proportional to `dict[k]`. Thus, `dict` must be of type
 `Dict{S, T<:Real}`.
+
+
+**Notes**
+
++ No error checking is done on the input. An error
+might be raised for bad input, but that's not
+guaranteed.
++ The implementation might be improved. If the size
+of the argument is small, this is efficient enough.
+But if `wts` (or `d`) has many elements, I probably
+should do some sort of binary search through the vector
+of cummulative sums.
