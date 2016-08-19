@@ -1,25 +1,25 @@
 module SimpleRandom
 
-export RandomUnitVector, RandomSubset
+export random_unit_vector, random_subset
 
 """
-`RandomUnitVector(d)` returns a random `d`-dimensional unit vector.
+`random_unit_vector(d)` returns a random `d`-dimensional unit vector.
 """
-function RandomUnitVector(d::Int)
+function random_unit_vector(d::Int)
   v = randn(d)
   return v / norm(v)
 end
 
 """
-`RandomSubset` is used to create random subsets as follows:
+`random_subset` is used to create random subsets as follows:
 
-+ `RandomSubset(A)`: random subset of `A` with each element
++ `random_subset(A)`: random subset of `A` with each element
 chosen with probability 1/2.
-+ `RandomSubset(A,k)`: random `k`-element subset of `A`.
-+ `RandomSubset(n)`: random subset of `1:n`.
-+ `RandomSubset(n,k)`: random `k`-element subset of `1:n`.
++ `random_subset(A,k)`: random `k`-element subset of `A`.
++ `random_subset(n)`: random subset of `1:n`.
++ `random_subset(n,k)`: random `k`-element subset of `1:n`.
 """
-function RandomSubset(A::Union{Set,IntSet})
+function random_subset(A::Union{Set,IntSet})
   T = typeof(A)
   B = T()
   for a in A
@@ -30,9 +30,9 @@ function RandomSubset(A::Union{Set,IntSet})
   return B
 end
 
-RandomSubset(n::Int) = RandomSubset(Set(1:n))
+random_subset(n::Int) = random_subset(Set(1:n))
 
-function RandomSubset(A::Union{Set,IntSet}, k::Int)
+function random_subset(A::Union{Set,IntSet}, k::Int)
   n = length(A)
   if k<0 || k>n
     error("k = $k is out of range")
@@ -47,7 +47,7 @@ function RandomSubset(A::Union{Set,IntSet}, k::Int)
   return B
 end
 
-function RandomSubset(n::Int, k::Int)
+function random_subset(n::Int, k::Int)
   if n<0 || k<0 || k>n
     error("n = $n and/or k = $k invalid")
   end
@@ -55,6 +55,40 @@ function RandomSubset(n::Int, k::Int)
   y = x[1:k]
   return Set(y)
 end
+
+
+export random_choice
+
+"""
+`random_choice(weights)` randomly chooses a value from `1` to `n`,
+where `n` is the number of elements in `weights`. The probability
+that `k` is chosen is proportional to `weights[k]`. The `weights`
+must be nonnegative and not all zero.
+
+`random_choice(dict)` choose a random key `k` from `dict` with weight
+proportional to `dict[k]`. Thus, `dict` must be of type
+`Dict{S, T<:Real}`.
+"""
+function random_choice{T<:Real}(weights::Vector{T})
+  vals = cumsum(weights)
+  vals /= vals[end]
+  idx = rand()
+  for k=1:length(vals)
+    @inbounds if idx <= vals[k]
+      return k
+    end
+  end
+  error("Impropper input")
+end
+
+function random_choice{S,T<:Real}(d::Dict{S,T})
+  ks = collect(keys(d))
+  n = length(ks)
+  wts = [ d[ks[j]] for j=1:n ]
+  idx = random_choice(wts)
+  return ks[idx]
+end
+
 
 
 end  # end of module

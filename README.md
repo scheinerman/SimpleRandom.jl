@@ -5,12 +5,12 @@ random things. Part of the `SimpleWorld` collection.
 
 ## Functions
 
-+ `RandomUnitVector(d)` returns a random `d`-dimensional unit vector.
-+ `RandomSubset` creates a random subset with the following variations:
-  + `RandomSubset(A)`: create a random subset of `A`
++ `random_unit_vector(d)` returns a random `d`-dimensional unit vector.
++ `random_subset` creates a random subset with the following variations:
+  + `random_subset(A)`: create a random subset of `A`
   with each element included with probability 0.5.
-  + `RandomSubset(A,k)`: create a random `k`-element
+  + `random_subset(A,k)`: create a random `k`-element
   subset of `A`.
-  + `RandomSubset(n)`: create a random subset of `1:n`.
-  + `RandomSubset(n,k)`: create a random `k`-element
+  + `random_subset(n)`: create a random subset of `1:n`.
+  + `random_subset(n,k)`: create a random `k`-element
   subset of `1:n`.
