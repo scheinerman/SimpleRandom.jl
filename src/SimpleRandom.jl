@@ -90,5 +90,14 @@ function random_choice{S,T<:Real}(d::Dict{S,T})
 end
 
 
+import StatsFuns.RFunctions.binomrand
+export binom_rv
+"""
+`binom_rv(n,p)` generates a random binomial random value.
+`p` defaults to `0.5`.
+"""
+binom_rv(n::Int,p::Float64=0.5) = Int(binomrand(n,p))
+
+
 
 end  # end of module
