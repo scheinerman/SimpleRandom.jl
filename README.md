@@ -49,21 +49,20 @@ of cummulative sums.
 
 ## Distributions
 
-### Binomial
+**Note**: I'm just wrapping stuff found in  `Distributions`.
+Probably better just to use that package directly.
+
+#### Binomial
 
 `binom_rv(n,p)` generates a random binomial random value. `p` defaults
 to `0.5`.
 
-**Note**: This is simply a wrapper around `StatsFuns.RFunctions.binomrand`
-but converts the output to an `Int`.
-
-### Poisson
+#### Poisson
 
 `poisson_rv(lambda)` returns a Poisson random value with mean `lambda`
 (which defaults to `1.0`).
 
+#### Exponential
 
-#### To do list (for distributions)
-
-+ Poisson
-+ Exponential
+`exp_rv(theta)` returns an exponential random value with
+mean `theta` (which defaults to `1.0`).

@@ -90,23 +90,30 @@ function random_choice{S,T<:Real}(d::Dict{S,T})
 end
 
 
-import StatsFuns.RFunctions.binomrand
-export binom_rv
+
+import Distributions
+
+export binom_rv, poisson_rv, exp_rv
+
 """
 `binom_rv(n,p)` generates a random binomial random value.
 `p` defaults to `0.5`.
 """
-binom_rv(n::Int,p::Real=0.5) = Int(binomrand(n,p))
+binom_rv(n::Int,p::Real=0.5) = rand(Distributions.Binomial(n,p))
 
-import StatsFuns.RFunctions.poisrand
-export poisson_rv
 
 """
 `poisson_rv(lambda)` generates a Poisson random value with
 mean `lamba` (which defaults to `1.0`).
 """
-poisson_rv(lambda::Real) = Int(poisrand(lambda))
+poisson_rv(lambda::Real=1.0) = rand(Distributions.Poisson(lambda))
 
+
+"""
+`exp_rv(theta)` returns an exponential random value with
+mean `theta` (which defaults to `1.0`).
+"""
+exp_rv(theta::Real=1.0) = rand(Distributions.Exponential(theta))
 
 
 
