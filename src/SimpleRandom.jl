@@ -95,7 +95,7 @@ end
 `histplot(x)` plot a histogram of the values in `x` and
 `histplot(x,n)` gives a plot with `n` bins.
 """
-histplot(args...) = plt[:hist](args...)
+histplot = plt[:hist]
 
 
 import Distributions
