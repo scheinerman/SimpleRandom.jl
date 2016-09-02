@@ -46,6 +46,11 @@ But if `wts` (or `d`) has many elements, I probably
 should do some sort of binary search through the vector
 of cummulative sums.
 
+## Histogram
+
+The function `histplot(x)` creates a `PyPlot` bar chart giving a histogram
+of the values in the list `x`. Called as `histplot(x,n)` creates such
+a plot with `n` bins.
 
 ## Distributions
 

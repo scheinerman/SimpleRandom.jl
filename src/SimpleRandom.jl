@@ -1,6 +1,8 @@
 module SimpleRandom
 
-export random_unit_vector, random_subset
+using PyPlot
+
+export random_unit_vector, random_subset, histplot
 
 """
 `random_unit_vector(d)` returns a random `d`-dimensional unit vector.
@@ -89,6 +91,11 @@ function random_choice{S,T<:Real}(d::Dict{S,T})
   return ks[idx]
 end
 
+"""
+`histplot(x)` plot a histogram of the values in `x` and
+`histplot(x,n)` gives a plot with `n` bins.
+"""
+histplot(args...) = plt[:hist](args...)
 
 
 import Distributions
