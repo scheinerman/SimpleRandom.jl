@@ -1,6 +1,7 @@
-import Base: getindex, setindex!, (+), keys, values, (*)
+import Base: getindex, setindex!, (+), (*), length, show
 
-export RV, RV_types, check, rescale!, E, Var
+export RV, RV_types, E, Var, validate!
+export vals, probs
 export Uniform_RV, Binomial_RV, Bernoulli_RV
 
 
@@ -19,43 +20,53 @@ end
 RV_types{S,T}(X::RV{S,T}) = (S,T)
 
 """
-`check(X)` makes sure the probabilities are nonnegative
-and sum to 1.
+`length(X::RV)` returns the number of values in the random variable `X`.
 """
-function check{S,T}(X::RV{S,T})
-  if X.valid
-    return true
-  end
-  for v in values(X.data)
-    if v<0
-      return false
-    end
-  end
-  u::T = sum(values(X.data))
-  X.valid = (u == one(T))
-  return X.valid
+length(X::RV) = length(X.data)
+
+function show(io::IO, X::RV)
+  S,T = RV_types(X)
+  print(io, "RV{$S,$T} with $(length(X.data)) values")
 end
 
-keys(RV) = keys(RV.data)
-values(RV) = values(RV.data)
+"""
+`vals(X::RV)` returns an iterator of the values this random variable
+can take. Use `X[v]` to get the associate probability of the
+value `v`.
+"""
+vals(X::RV) = keys(X.data)
 
 """
-`rescale!(X)`:
-Make sure probabilities sum to one.
+`probs(X::RV)` returns an iterator of the probabilities associated with
+the values in `X`.
 """
-function rescale!{S,T}(X::RV{S,T})
-  u = sum(values(X.data))
-  for x in keys(X.data)
-    X.data[x]/= u
+function probs(X::RV)
+  validate!(X)
+  return values(X.data)
+end
+
+"""
+`validate!(X)` ensures that the probabilies of the values in `X`
+sum to one. If not, they are rescaled.
+"""
+function validate!(X::RV)
+  if !X.valid
+    u = sum(values(X.data))
+    for x in keys(X.data)
+      X.data[x]/= u
+    end
+    X.valid = true
   end
-  X.valid = true
   nothing
 end
+
+
 
 """
 `E(X)` is the expected value of `X`.
 """
 function E{S,T}(X::RV{S,T})
+  validate!(X)
   return  sum( k*X.data[k] for k in keys(X.data))
 end
 
@@ -63,6 +74,7 @@ end
 `Var(Y)` is the variance of `Y`.
 """
 function Var{S,T}(X::RV{S,T})
+  validate!(X)
   exex = E(X)^2
   exx  = sum( k*k*X.data[k] for k in keys(X.data))
   return exx - exex
@@ -104,20 +116,23 @@ function Uniform_RV(n::Int)
   return X
 end
 
-
+"""
+`X[v]` returns the probability of `v` in the random variable `X`.
+Note that we validate `X` (with `validate!`) before retrieving
+the value.
+"""
 function getindex{S,T}(X::RV{S,T}, k::S)
-  if !X.valid
-    rescale!(X)
-  end
+  validate!(X)
   try
     return X.data[k]
   end
   return zero(T)
 end
 
-function setindex!{S,T}(X::RV{S,T}, p::T, k::S)
+function setindex!{S,T}(X::RV{S,T}, p::Real, k::S)
   @assert p>=0 "Probability must be nonnegative"
-  X.data[k] = p
+  X.data[k] = T(p)
+  X.valid = false
   return p
 end
 
@@ -125,8 +140,8 @@ end
 `X+Y` sum of independent random variables.
 """
 function (+)(X::RV, Y::RV)
-  S = typeof( first(keys(X)) + first(keys(Y)) )
-  T = typeof( first(values(X)) + first(values(Y)) )
+  S = typeof( first(vals(X)) + first(vals(Y)) )
+  T = typeof( first(probs(X)) + first(probs(Y)) )
 
   Z = RV{S,T}()
   for a in keys(X.data)
@@ -138,13 +153,13 @@ function (+)(X::RV, Y::RV)
 end
 
 """
-`a*X` scalar multiple of the random variable `X`
+`a*X` creates a scalar multiple of the random variable `X`.
 """
 function (*)(a, X::RV)
-  S = typeof( first(keys(X)) * a)
-  T = typeof( first(values(X)) )
+  S = typeof( first(vals(X)) * a)
+  T = typeof( first(probs(X)) )
   aX = RV{typeof(a),T}()
-  for k in keys(X)
+  for k in vals(X)
     aX[a*k] = X[k]
   end
   return aX
