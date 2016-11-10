@@ -2,6 +2,8 @@ module SimpleRandom
 
 using PyPlot
 
+include("RV.jl")
+
 export random_unit_vector, random_subset, histplot
 
 """
