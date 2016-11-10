@@ -168,3 +168,14 @@ function (*)(a, X::RV)
   end
   return aX
 end
+
+# This implementation is somewhat inefficient
+"""
+`random_choice(X)` for a random variable `X` returns a value of `X`
+according to its probability distribution. That is, the probability
+a value `v` is returned is `X[v]`.
+"""
+function random_choice(X::RV)
+  validate!(X)
+  return random_choice(X.data)
+end
