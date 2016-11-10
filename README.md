@@ -71,3 +71,8 @@ to `0.5`.
 
 `exp_rv(theta)` returns an exponential random value with
 mean `theta` (which defaults to `1.0`).
+
+
+# Random Variable Type
+
+Placeholder to document the `RV` type.
