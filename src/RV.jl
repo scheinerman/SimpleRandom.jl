@@ -7,7 +7,7 @@ export Uniform_RV, Binomial_RV, Bernoulli_RV
 """
 `RV` represents a discrete random variable with finite support.
 """
-type RV{S<:Real, T<:Real}
+type RV{S<:Number, T<:Real}
   data::Dict{S,T}
   valid::Bool
   function RV()
