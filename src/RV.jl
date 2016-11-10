@@ -1,4 +1,4 @@
-import Base: getindex, setindex!, (+), (*), length, show
+import Base: getindex, setindex!, (+), (*), length, setindex!, show
 
 export RV, RV_types, E, Var, validate!
 export vals, probs
@@ -146,9 +146,13 @@ function (+)(X::RV, Y::RV)
   Z = RV{S,T}()
   for a in keys(X.data)
     for b in keys(Y.data)
-      Z[a+b] += X[a]*Y[b]
+      if !haskey(Z.data,a+b)
+        Z.data[a+b] = 0
+      end
+      Z.data[a+b] += X.data[a]*Y.data[b]
     end
   end
+  validate!(Z)
   return Z
 end
 
