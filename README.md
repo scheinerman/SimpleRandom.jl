@@ -75,4 +75,143 @@ mean `theta` (which defaults to `1.0`).
 
 # Random Variable Type
 
-Placeholder to document the `RV` type.
+The `RV` type represents a random variable *with finite support*; that is,
+the set of possible values produced by the random variable is finite. This
+rules out continuous random variables and discrete random variables with
+infinite support such as Poisson random variables.
+
+## Defining a random variable
+
+The user needs to specify the value type of the random variable
+(which needs to be a `Number` type) and the data type for the probabilities
+(which needs to be a `Real` type such as `Float64` or `Rational{Int}`).
+
+For example, to define a random variable whose values are integers and
+whose probabilities are rational numbers, we do this:
+```julia
+julia> using SimpleRandom
+
+julia> X = RV{Int, Rational{Int}}()
+RV{Int64,Rational{Int64}} with 0 values
+```
+
+Now let's imagine that we want the values of `X` to be in the
+set {1,2,3} with probabilities 1/2, 1/4, and 1/4 respectively.
+We can specify this in two ways.
+
+First, we can directly enter the probabilities like this:
+```julia
+julia> X = RV{Int, Rational{Int}}()
+RV{Int64,Rational{Int64}} with 0 values
+
+julia> X[1]=1//2
+1//2
+
+julia> X[2]=1//4
+1//4
+
+julia> X[3]=1//4
+1//4
+
+julia> report(X)
+1   1//2
+2   1//4
+3   1//4
+```
+
+Alternatively, we can enter values and have them automatically scaled
+so that they add to 1.
+```julia
+julia> X = RV{Int, Rational{Int}}()
+RV{Int64,Rational{Int64}} with 0 values
+
+julia> X[1] = 2
+2
+
+julia> X[2] = 1
+1
+
+julia> X[3] = 1
+1
+
+julia> report(X)
+1	  1//2
+2	  1//4
+3	  1//4
+```
+
+Rescaling happens automatically any time the user/computer wants to
+access the probability associated with a value. In this case, the
+`report` function prints out the probabilities associated with each
+value so the rescaling took place behind the scenes then it was invoked.
+
+Continuing this example, if we now enter `X[4]=1//2`, the probabilities
+no longer sum to 1, so if we request the probability associated with a value,
+the rescaling takes place.
+```julia
+julia> X[4] = 1//2
+1//2
+
+julia> X[4]
+1//3
+
+julia> report(X)
+1	 1//3
+2	 1//6
+3	 1//6
+4	 1//3
+```
+
+In summary, `X[v]=p` assigns probability `p` to the value `v`. Retrieving
+a value invokes a rescaling operation (if needed) before the value is
+returned. Note that if `v` is a value that has not been assigned a
+probability, then `0` is returned.
+
+
+## Functions
+
+The following functions are provided:
+
++ `E(X)` returns the expected value of `X`.
++ `Var(X)` returns the variance of `X`.
++ `length(X)` returns the number of values to which probabilities
+have been assigned.
++ `vals(X)` returns an iterator to the values associated with `X`.
++ `probs(X)` returns an iterator to the probabilities associated
+with values in `X`.
++ `report(X)` prints a table consisting of the values and their
+associated probabilities.
++ `random_choice(X)` returns a random value `v` of `X` at random
+with probability `X[v]`. This function is not efficient.  Compare these
+timings for generating an array of ten thousand binomial random
+values:
+
+```julia
+julia> X = Binomial_RV(20,.5)
+RV{Int64,Float64} with 21 values
+
+julia> tic(); A = [ random_choice(X) for _=1:10_000 ]; toc();
+elapsed time: 0.230939433 seconds
+
+julia> tic(); B = [ binom_rv(20,.5) for _=1:10_000]; toc();
+elapsed time: 0.017233562 seconds
+```
+
+## Operations
+
++ `a*X` where `a` is a number creates a new random variable
+by multiplying the values in `X` by `a`.
++ `X+Y` creates a new random variable that represents the sum
+of the random variables `X` and `Y` considered as independent.
+Note that `2*X` is *not* the same as `X+X`.
++ `X-Y` is the difference of independent `X` and `Y`.
+
+## Pre-made random variables
+
++ `Uniform_RV(n)` creates a random variable whose values are
+in `1:n` each with probability `1//n`.
++ `Bernoulli_RV(p)` creates a random variable whose value is `0`
+with probability `1-p` and `1` with probability `p`.
++ `Binomial(n,p)` creates a random variable whose values are in `0:n`
+with probability given by the binomial distribution. That is, the value
+`k` has probability `binomial(n,k)*p^k*(1-p)^(n-k)`.

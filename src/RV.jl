@@ -1,7 +1,7 @@
-import Base: getindex, setindex!, (+), (*), length, setindex!, show
+import Base: getindex, setindex!, (+), (*), (-), length, setindex!, show
 
 export RV, RV_types, E, Var, validate!
-export vals, probs
+export vals, probs, report
 export Uniform_RV, Binomial_RV, Bernoulli_RV
 
 
@@ -66,6 +66,7 @@ end
 `E(X)` is the expected value of `X`.
 """
 function E{S,T}(X::RV{S,T})
+  @assert length(X)>0 "Cannot compute the expected value: no values!"
   validate!(X)
   return  sum( k*X.data[k] for k in keys(X.data))
 end
@@ -74,6 +75,7 @@ end
 `Var(Y)` is the variance of `Y`.
 """
 function Var{S,T}(X::RV{S,T})
+  @assert length(X)>0 "Cannot compute the variance: no values!"
   validate!(X)
   exex = E(X)^2
   exx  = sum( k*k*X.data[k] for k in keys(X.data))
@@ -136,8 +138,12 @@ function setindex!{S,T}(X::RV{S,T}, p::Real, k::S)
   return p
 end
 
+
+
+
+
 """
-`X+Y` sum of independent random variables.
+`X+Y`: sum of independent random variables.
 """
 function (+)(X::RV, Y::RV)
   S = typeof( first(vals(X)) + first(vals(Y)) )
@@ -156,8 +162,15 @@ function (+)(X::RV, Y::RV)
   return Z
 end
 
+
 """
-`a*X` creates a scalar multiple of the random variable `X`.
+`X-Y`: difference of independent random variables.
+"""
+(-)(X::RV,Y::RV) = X + (-Y)
+
+
+"""
+`a*X`: scalar multiple of the random variable `X`.
 """
 function (*)(a, X::RV)
   S = typeof( first(vals(X)) * a)
@@ -169,6 +182,14 @@ function (*)(a, X::RV)
   return aX
 end
 
+"""
+`-X`: negative of a random variable.
+"""
+function (-){S,T}(X::RV{S,T})
+  negone = - one(S)
+  return negone * X
+end
+
 # This implementation is somewhat inefficient
 """
 `random_choice(X)` for a random variable `X` returns a value of `X`
@@ -178,4 +199,19 @@ a value `v` is returned is `X[v]`.
 function random_choice(X::RV)
   validate!(X)
   return random_choice(X.data)
+end
+
+"""
+`report(X)` prints out a list of the values of `X` and their
+associated probabilities
+"""
+function report(X::RV)
+  A = collect(vals(X))
+  try
+    sort!(A)
+  end
+  for a in A
+    println("$a\t$(X[a])")
+  end
+  nothing
 end
