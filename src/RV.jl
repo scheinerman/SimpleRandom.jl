@@ -172,7 +172,7 @@ end
 """
 `a*X`: scalar multiple of the random variable `X`.
 """
-function (*)(a, X::RV)
+function (*)(a::Number, X::RV)
   S = typeof( first(vals(X)) * a)
   T = typeof( first(probs(X)) )
   aX = RV{typeof(a),T}()
