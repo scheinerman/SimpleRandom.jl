@@ -8,10 +8,10 @@ export Uniform_RV, Binomial_RV, Bernoulli_RV
 """
 `RV` represents a discrete random variable with finite support.
 """
-type RV{S<:Number, T<:Real}
+mutable struct RV{S<:Number, T<:Real}
   data::Dict{S,T}
   valid::Bool
-  function RV()
+  function RV{S,T}() where {S,T}
     d = Dict{S,T}()
     new(d,false)
   end
