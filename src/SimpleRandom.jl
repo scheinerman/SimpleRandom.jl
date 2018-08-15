@@ -23,7 +23,7 @@ chosen with probability 1/2.
 + `random_subset(n)`: random subset of `1:n`.
 + `random_subset(n,k)`: random `k`-element subset of `1:n`.
 """
-function random_subset(A::Union{Set,IntSet})
+function random_subset(A::Union{Set,BitSet})
   T = typeof(A)
   B = T()
   for a in A
@@ -36,7 +36,7 @@ end
 
 random_subset(n::Int) = random_subset(Set(1:n))
 
-function random_subset(A::Union{Set,IntSet}, k::Int)
+function random_subset(A::Union{Set,BitSet}, k::Int)
   n = length(A)
   if k<0 || k>n
     error("k = $k is out of range")
@@ -73,7 +73,7 @@ must be nonnegative and not all zero.
 proportional to `dict[k]`. Thus, `dict` must be of type
 `Dict{S, T<:Real}`.
 """
-function random_choice{T<:Real}(weights::Vector{T})
+function random_choice(weights::Vector{T}) where {T<:Real}
   vals = cumsum(weights)
   vals /= vals[end]
   idx = rand()
@@ -85,7 +85,7 @@ function random_choice{T<:Real}(weights::Vector{T})
   error("Impropper input")
 end
 
-function random_choice{S,T<:Real}(d::Dict{S,T})
+function random_choice(d::Dict{S,T}) where {S,T<:Real}
   ks = collect(keys(d))
   n = length(ks)
   wts = [ d[ks[j]] for j=1:n ]
