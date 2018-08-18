@@ -1,5 +1,18 @@
 # Simple Random
 
+
+[![Build Status](https://travis-ci.org/scheinerman/SimpleRandom.jl.svg?branch=master)](https://travis
+-ci.org/scheinerman/SimpleRandom.jl)
+
+[![Coverage Status](https://coveralls.io/repos/scheinerman/SimpleRandom.jl/badge.svg?branch=master&se
+rvice=github)](https://coveralls.io/github/scheinerman/SimpleRandom.jl?branch=master)
+
+[![codecov.io](http://codecov.io/github/scheinerman/SimpleRandom.jl/coverage.svg?branch=master)](http
+://codecov.io/github/scheinerman/SimpleRandom.jl?branch=master)
+
+
+
+
 This is a collection of Julia functions to make
 random things. Part of the `SimpleWorld` collection.
 
@@ -44,13 +57,18 @@ guaranteed.
 of the argument is small, this is efficient enough.
 But if `wts` (or `d`) has many elements, I probably
 should do some sort of binary search through the vector
-of cummulative sums.
+of cumulative sums.
 
 ## Histogram
 
 The function `histplot(x)` creates a `PyPlot` bar chart giving a histogram
 of the values in the list `x`. Called as `histplot(x,n)` creates such
 a plot with `n` bins.
+
+**Note**: This function has been moved to a separate file `histplot.jl` in
+the `src` directory. I've been having some issues with `PyPlot` and
+this function doesn't really apply to creating random things (but
+  rather to visualizing them).
 
 ## Distributions
 

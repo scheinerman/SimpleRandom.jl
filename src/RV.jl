@@ -214,6 +214,6 @@ function report(X::RV)
     for a in A
       println("$a\t$(X[a])")
     end
-    nothing
   end
+  nothing
 end

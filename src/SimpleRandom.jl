@@ -1,10 +1,9 @@
 module SimpleRandom
-
-using PyPlot
+import Random.randperm 
 
 include("RV.jl")
 
-export random_unit_vector, random_subset, histplot
+export random_unit_vector, random_subset
 
 """
 `random_unit_vector(d)` returns a random `d`-dimensional unit vector.
@@ -93,11 +92,6 @@ function random_choice(d::Dict{S,T}) where {S,T<:Real}
   return ks[idx]
 end
 
-"""
-`histplot(x)` plot a histogram of the values in `x` and
-`histplot(x,n)` gives a plot with `n` bins.
-"""
-histplot = plt[:hist]
 
 
 import Distributions
