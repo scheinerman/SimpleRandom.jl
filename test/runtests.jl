@@ -1,5 +1,5 @@
 using Test
-using SimpleRandom
+using SimpleRandom, LinearAlgebra
 
 A = random_subset(100)
 @test length(A) <= 100
@@ -35,3 +35,6 @@ X[3] = 1//6
 a = random_choice(X)
 @test 0<a<4
 @test sum(probs(X)) == 1
+
+v = random_unit_vector(5)
+@test 0.9999 <= norm(v) <=1.0001

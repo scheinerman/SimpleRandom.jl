@@ -1,5 +1,6 @@
 module SimpleRandom
-import Random.randperm 
+using LinearAlgebra
+import Random.randperm
 
 include("RV.jl")
 
