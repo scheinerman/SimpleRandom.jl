@@ -1,4 +1,4 @@
-# Simple Random
+# SimpleRandom
 
 
 [![Build Status](https://travis-ci.org/scheinerman/SimpleRandom.jl.svg?branch=master)](https://travis-ci.org/scheinerman/SimpleRandom.jl)
