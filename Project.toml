@@ -1,6 +1,6 @@
 name = "SimpleRandom"
 uuid = "a6525b86-64cd-54fa-8f65-62fc48bdc0e8"
-version = "0.2.2"
+version = "0.2.3"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
